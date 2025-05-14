@@ -116,7 +116,7 @@
                   create="1" edit="1" js_class="inventory_report_list"
                   sample="1" duplicate="0">
                 <header>
-                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_quants'}"/>
+                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'action_view_adjs'}"/>
                 </header>
                 <field name="create_date" column_invisible="True"/>
                 <field name="write_date" column_invisible="True"/>
@@ -221,7 +221,7 @@
             action = model.with_context(
                 search_default_internal_loc=1,
                 always_show_loc=1,
-            ).action_view_quants()
+            ).action_view_adjs()
         </field>
     </record>
 
@@ -297,7 +297,7 @@
                     <button name="stock.action_stock_inventory_adjustement_name" type="action" string="Apply"/>
                     <button name="action_reset" type="object" string="Clear"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
-                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_adjustment_tree'}"/>
+                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'action_view_adjustment_tree'}"/>
                 </header>
                 <field name="create_date" column_invisible="True"/>
                 <field name="write_date" column_invisible="True"/>
