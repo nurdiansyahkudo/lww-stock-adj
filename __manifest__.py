@@ -6,7 +6,7 @@
     'version': '1.1',
     'summary': 'Manage your stock and logistics activities',
     'website': '',
-    'depends': ['product', 'barcodes_gs1_nomenclature', 'digest'],
+    'depends': ['product', 'barcodes_gs1_nomenclature', 'digest', 'stock'],
     'category': 'Inventory/Inventory',
     'sequence': 25,
     'data': [
