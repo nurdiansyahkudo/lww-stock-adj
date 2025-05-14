@@ -13,14 +13,21 @@
     </record>
 
     <record model="ir.actions.server" id="action_stock_adjustment_menu">
-    <field name="name">Stock Adjustment</field>
-    <field name="model_id" ref="model_stock_adj"/>
-    <field name="path">stock-adjustment</field>
-    <field name="state">code</field>
-    <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
-    <field name="code">
-        action = model.action_view_adjustments()
-    </field>
-</record>
+        <field name="name">Stock Adjustment</field>
+        <field name="model_id" ref="model_stock_adj"/>
+        <field name="path">stock-adjustment</field>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="code">
+            action = model.action_view_adjustments()
+        </field>
+    </record>
+
+    <menuitem 
+        id="menu_action_stock_adjustment_custom" 
+        name="Stock Adjustment"
+        parent="stock.menu_stock_adjustments" 
+        action="action_stock_adjustment_menu"
+        sequence="20"/>
 
 </odoo>

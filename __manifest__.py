@@ -6,7 +6,7 @@
     'summary': 'Custom Stock Adjustment Model using stock.adj',
     'data': [
         'views/stock_adj_views.xml',
-        'views/stock_adj_menu.xml',
+        # 'views/stock_adj_menu.xml',
     ],
     'installable': True,
     'auto_install': False,
