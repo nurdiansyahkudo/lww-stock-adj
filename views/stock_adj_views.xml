@@ -20,7 +20,7 @@
         </field>
     </record>
 
-    <record model="ir.actions.server" id="action_stock_adjustment_menu">
+    <record model="ir.actions.server" id="action_stock_adjustment_list">
         <field name="name">Stock Adjustment</field>
         <field name="model_id" ref="model_stock_adj"/>
         <field name="path">stock-adjustment</field>
@@ -32,10 +32,10 @@
     </record>
 
     <menuitem 
-        id="menu_action_stock_adjustment_custom" 
+        id="menu_action_stock_adjustment_list"
         name="Stock Adjustment"
         parent="stock.menu_stock_adjustments" 
-        action="action_stock_adjustment_menu"
+        action="action_stock_adjustment_list"
         sequence="20"/>
 
 </odoo>
