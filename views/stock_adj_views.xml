@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.actions.server" id="action_view_adjustment_tree"> <!-- Menu + python -->
+    <record model="ir.actions.server" id="action_view_inventory_tree"> <!-- Menu + python -->
         <field name="name">Inventory</field>
-        <field name="model_id" ref="model_stock_adj"/>
+        <field name="model_id" ref="stock.model_stock_quant"/>
         <field name="path">stock-adjustment</field>
         <field name="state">code</field>
         <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
-            action = model.action_view_adjustment()
+            action = model.action_view_inventory()
         </field>
     </record>
 
@@ -419,7 +419,7 @@
                     <button name="stock.action_stock_inventory_adjustement_name" type="action" string="Apply"/>
                     <button name="action_reset" type="object" string="Clear"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
-                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_adjustment_tree'}"/>
+                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_inventory_tree'}"/>
                 </header>
                 <field name="create_date" column_invisible="True"/>
                 <field name="write_date" column_invisible="True"/>
@@ -486,5 +486,5 @@
         </field>
     </record>
 
-    <menuitem id="menu_action_adjustment_tree" name="Stock Adjustment" parent="stock.menu_stock_adjustments" sequence="10" action="action_view_adjustment_tree"/>
+    <menuitem id="menu_action_adjustment_tree" name="Stock Adjustment" parent="stock.menu_stock_adjustments" sequence="10" action="action_view_inventory_tree"/>
 </odoo>
