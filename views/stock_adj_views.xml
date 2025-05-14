@@ -23,7 +23,7 @@
     <record model="ir.actions.server" id="action_stock_adjustment_list">
         <field name="name">Stock Adjustment</field>
         <field name="model_id" ref="model_stock_adj"/>
-        <field name="path">stock-adjustment</field>
+        <field name="path">adjustment-stock</field>
         <field name="state">code</field>
         <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
