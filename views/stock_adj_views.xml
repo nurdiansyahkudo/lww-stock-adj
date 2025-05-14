@@ -12,19 +12,21 @@
         </field>
     </record>
 
-    <record id="view_stock_adj_form" model="ir.ui.view">
-        <field name="name">stock.adj.form</field>
-        <field name="model">stock.adj</field>
-        <field name="arch" type="xml">
-            <form>
-                <field name="quant_id"/>
-            </form>
-        </field>
-    </record>
+    <record model="ir.actions.server" id="action_stock_adjustment_custom">
+    <field name="name">Stock Adjustment</field>
+    <field name="model_id" ref="model_stock_adj"/>
+    <field name="path">stock-adjustment</field>
+    <field name="state">code</field>
+    <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+    <field name="code">
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': 'Stock Adjustment',
+            'res_model': 'stock.adj',
+            'view_mode': 'tree,form',
+            'target': 'current',
+        }
+    </field>
+</record>
 
-    <record id="action_stock_adjustment_custom" model="ir.actions.act_window">
-        <field name="name">Stock Adjustment</field>
-        <field name="res_model">stock.adj</field>
-        <field name="view_mode">tree,form</field>
-    </record>
 </odoo>
