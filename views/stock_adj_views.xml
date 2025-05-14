@@ -3,12 +3,12 @@
         <field name="name">stock.adj.tree</field>
         <field name="model">stock.adj</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="quant_id"/>
-                <!-- <field name="product_id"/>
+                <field name="product_id"/>
                 <field name="location_id"/>
-                <field name="quantity"/> -->
-            </tree>
+                <field name="quantity"/>
+            </list>
         </field>
     </record>
 
