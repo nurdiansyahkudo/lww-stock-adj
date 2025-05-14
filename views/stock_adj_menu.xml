@@ -2,7 +2,7 @@
     <menuitem 
         id="menu_action_stock_adjustment_custom" 
         name="Stock Adjustment"
-        parent="menu_stock_adjustments" 
+        parent="stock.menu_stock_adjustments" 
         action="action_stock_adjustment_custom"
         sequence="20"/>
 </odoo>
