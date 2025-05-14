@@ -406,7 +406,7 @@ class StockAdj(models.Model):
         ctx['no_at_date'] = True
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
-        view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
+        view_id = self.env.ref('view_stock_adj_tree_inventory_editable').id
         action = {
             'name': _('Stock Adjustments'),
             'view_mode': 'list',
