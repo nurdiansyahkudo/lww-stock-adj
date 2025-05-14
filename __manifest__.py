@@ -10,7 +10,7 @@
     'category': 'Inventory/Inventory',
     'sequence': 25,
     'data': [
-        'report/report_stock_quantity.xml',
+        'reports/report_stock_quantity.xml',
 
         'wizard/stock_quantity_history.xml',
         'wizard/stock_quant_relocate.xml',
