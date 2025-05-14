@@ -240,7 +240,7 @@
         <field name="view_id" ref="view_stock_adj_tree"/>
     </record>
 
-    <record id="adj_package_search_view" model="ir.ui.view">
+    <!-- <record id="adj_package_search_view" model="ir.ui.view">
         <field name="name">stock.adj.package.search</field>
         <field name="model">stock.adj.package</field>
         <field eval="10" name="priority"/>
@@ -256,9 +256,9 @@
                </group>
             </search>
         </field>
-    </record>
+    </record> -->
 
-    <record model="ir.ui.view" id="view_adj_package_form">
+    <!-- <record model="ir.ui.view" id="view_adj_package_form">
         <field name="name">stock.adj.package.form</field>
         <field name="model">stock.adj.package</field>
         <field eval="10" name="priority"/>
@@ -312,9 +312,9 @@
                 </sheet>
             </form>
         </field>
-    </record>
+    </record> -->
 
-    <record model="ir.ui.view" id="view_adj_package_tree">
+    <!-- <record model="ir.ui.view" id="view_adj_package_tree">
         <field name="name">stock.adj.package.list</field>
         <field name="model">stock.adj.package</field>
         <field eval="10" name="priority"/>
@@ -326,9 +326,9 @@
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
         </field>
-    </record>
+    </record> -->
 
-    <record model="ir.ui.view" id="view_adj_package_kanban">
+    <!-- <record model="ir.ui.view" id="view_adj_package_kanban">
         <field name="name">stock.adj.package.kanban</field>
         <field name="model">stock.adj.package</field>
         <field name="arch" type="xml">
@@ -341,9 +341,9 @@
                 </templates>
             </kanban>
         </field>
-    </record>
+    </record> -->
 
-    <record model="ir.actions.act_window" id="action_package_view">
+    <!-- <record model="ir.actions.act_window" id="action_package_view">
         <field name="name">Packages</field>
         <field name="res_model">stock.adj.package</field>
         <field name="view_mode">kanban,list,form</field>
@@ -360,7 +360,7 @@
                 Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again.
             </p>
         </field>
-    </record>
+    </record> -->
 
     <record id="duplicated_sn_warning" model="ir.ui.view">
         <field name="name">stock.adj.duplicated.sn.warning</field>
