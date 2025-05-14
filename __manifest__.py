@@ -1,23 +1,14 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 {
-    'name': 'LWW Stock Adjustment',
-    'version': '1.1',
-    'summary': 'Manage your stock and logistics activities',
-    'website': '',
-    'depends': ['product', 'barcodes_gs1_nomenclature', 'digest', 'stock'],
-    'category': 'Inventory/Inventory',
-    'sequence': 25,
+    'name': 'Stock Adjustment Custom',
+    'version': '1.0',
+    'depends': ['stock'],
+    'category': 'Inventory',
+    'summary': 'Custom Stock Adjustment Model using stock.adj',
     'data': [
-        'reports/report_stock_quantity.xml',
-
-        'wizard/stock_quantity_history.xml',
-        'wizard/stock_quant_relocate.xml',
-
         'views/stock_adj_views.xml',
+        'views/stock_adj_menu.xml',
     ],
     'installable': True,
+    'auto_install': False,
     'application': False,
-    'license': 'LGPL-3',
 }
