@@ -179,7 +179,7 @@
         <field name="model">stock.adj</field>
         <field eval="10" name="priority"/>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="stock.view_stock_adj_tree_simple"/>
+        <field name="inherit_id" ref="view_stock_adj_tree_simple"/>
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="js_class">inventory_report_list</attribute>
