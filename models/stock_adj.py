@@ -89,18 +89,19 @@ class StockAdj(models.Model):
         tree_view = self.env.ref('stock_adjustment_custom.view_stock_adj_tree').id
         form_view = self.env.ref('stock_adjustment_custom.view_stock_adj_form').id
 
-        return {
+        action =  {
             'name': _('Stock Adjustments'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'stock.adj',
             'view_mode': 'list',
-            'views': [(tree_view, 'list')],
+            'res_model': 'stock.adj',
+            'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('id', '!=', 0)],
+            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
+            'views': [(tree_view, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
                     {}
                 </p><p>{}</p>
             """.format(_('No stock adjustments found.'), _('Use CREATE to log a manual stock adjustment.')),
         }
+        return action
 

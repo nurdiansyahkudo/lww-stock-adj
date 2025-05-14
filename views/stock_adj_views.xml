@@ -36,6 +36,6 @@
         name="Stock Adjustment"
         parent="stock.menu_stock_adjustments" 
         action="action_stock_adjustment_list"
-        sequence="20"/>
+        sequence="10"/>
 
 </odoo>
