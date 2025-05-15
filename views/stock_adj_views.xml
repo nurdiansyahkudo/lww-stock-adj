@@ -58,8 +58,9 @@
                 <field name="inventory_quantity" widget="counted_quantity_widget"/>
                 <field name="inventory_diff_quantity" string="Difference"  invisible="not inventory_quantity_set" decoration-muted="inventory_diff_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
                 <field name="inventory_date" optional="show"/>
-                <field name="debit_line" optional="show" widget="monetary"/>
-                <field name="credit_line" optional="show" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="debit_line" optional="show"/>
+                <field name="credit_line" optional="show"/>
                 <field name="user_id" string="User" optional="hide"/>
                 <field name='company_id' groups="base.group_multi_company" optional="hide"/>
                 <field name="lot_properties" optional="hide"/>

@@ -17,27 +17,18 @@ class StockAdj(models.Model):
     @api.depends('lot_id')
     def _compute_debit_credit_line(self):
         for quant in self:
-            quant.debit_line = quant.credit_line = 0.0
+            debit = credit = 0.0
+            price = quant.lot_id.standard_price or 0.0
+            qty = quant.quantity
 
-            if not quant.lot_id:
-                continue
+            # Logic baru:
+            if qty == 1:
+                credit = qty * price
+            elif qty == 0:
+                debit = 1 * price  # diasumsikan 1 masuk (stok awal)
 
-            # Ambil 1 stock.move.line terbaru untuk product dan lot_id terkait
-            latest_move_line = self.env['stock.move.line'].search([
-                ('lot_id', '=', quant.lot_id.id),
-                ('state', '=', 'done'),
-            ], order='date desc', limit=1)
-
-            if latest_move_line:
-                qty = latest_move_line.quantity
-                price = quant.lot_id.standard_price or 0.0
-                from_usage = latest_move_line.location_id.usage
-                to_usage = latest_move_line.location_dest_id.usage
-
-                if from_usage not in ('internal', 'transit') and to_usage in ('internal', 'transit'):
-                    quant.debit_line = qty * price
-                elif from_usage in ('internal', 'transit') and to_usage not in ('internal', 'transit'):
-                    quant.credit_line = qty * price
+            quant.debit_line = debit
+            quant.credit_line = credit
 
     @api.model
     def action_view_adjustment(self):
@@ -56,7 +47,7 @@ class StockAdj(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('id', '=', -1)],
+            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
