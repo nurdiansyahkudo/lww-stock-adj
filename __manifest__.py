@@ -4,6 +4,7 @@
     'depends': ['stock'],
     'data': [
         'views/stock_adj_menu.xml',
+        'views/stock_adj_views.xml',
     ],
     'installable': True,
     'application': False,
