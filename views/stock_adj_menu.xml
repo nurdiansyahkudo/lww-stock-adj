@@ -4,7 +4,7 @@
     <menuitem
         id="menu_custom_stock_adjustment"
         name="Stock Adjustments"
-        parent="stock.menu_stock_warehouse_mgmt_operations"
+        parent="stock.menu_stock_adjustments"
         sequence="30"
         action="stock.action_inventory_form"
     />
