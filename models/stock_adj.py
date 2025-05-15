@@ -6,6 +6,7 @@ class StockAdj(models.Model):
     debit_line = fields.Monetary(string='Debit', compute='_compute_debit_credit_line', store=True)
     credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
+    is_adjustment_line = fields.Boolean(string='Adjustment Line', default=False)
 
     @api.depends('product_id')
     def _compute_currency_id(self):
@@ -45,7 +46,7 @@ class StockAdj(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
+            'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('is_adjustment_line', '=', True)],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
@@ -57,3 +58,14 @@ class StockAdj(models.Model):
                            _('Import')),
         }
         return action
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        view_id = self.env.context.get('params', {}).get('view_id')
+        custom_view_id = self.env.ref('lww_stock_adj.view_stock_adj_tree_custom').id
+
+        for vals in vals_list:
+            if view_id == custom_view_id:
+                vals['is_adjustment_line'] = True
+
+        return super().create(vals_list)
