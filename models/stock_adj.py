@@ -1,6 +1,8 @@
 from odoo import models, fields, api, _
 
 class StockAdj(models.Model):
+    
+    _name = 'stock.adj'
     _inherit = 'stock.quant'
 
     @api.model

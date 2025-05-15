@@ -2,7 +2,7 @@
 <odoo>
     <record model="ir.actions.server" id="action_view_adjustment_tree"> <!-- Menu + python -->
         <field name="name">Inventory</field>
-        <field name="model_id" ref="model_stock_quant"/>
+        <field name="model_id" ref="model_stock_adj"/>
         <field name="path">stock-adjustment</field>
         <field name="state">code</field>
         <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
@@ -12,8 +12,8 @@
     </record>
 
     <record model="ir.ui.view" id="view_stock_adj_tree_custom">
-        <field name="name">stock.quant.adj.list.custom</field>
-        <field name="model">stock.quant</field>
+        <field name="name">stock.adj.list.custom</field>
+        <field name="model">stock.adj</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
             <list default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1" js_class="inventory_report_list" sample="1">
