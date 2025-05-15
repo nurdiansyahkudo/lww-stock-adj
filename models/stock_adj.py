@@ -3,6 +3,42 @@ from odoo import models, fields, api, _
 class StockAdj(models.Model):
     _inherit = 'stock.quant'
 
+    debit_line = fields.Monetary(string='Debit Value', compute='_compute_debit_credit_line', store=True)
+    credit_line = fields.Monetary(string='Credit Value', compute='_compute_debit_credit_line', store=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
+
+    @api.depends('product_id')
+    def _compute_currency_id(self):
+        for rec in self:
+            rec.currency_id = rec.product_id.currency_id or self.env.company.currency_id
+
+    @api.depends('product_id')
+    def _compute_debit_credit_line(self):
+        for quant in self:
+            debit = credit = 0.0
+            # Cari stock.move.line yang terkait dengan product & lot_id dari quant
+            move_lines = self.env['stock.move.line'].search([
+                ('product_id', '=', quant.product_id.id),
+                ('lot_id', '=', quant.lot_id.id),
+            ])
+
+            for line in move_lines:
+                qty = line.qty_done
+                price = line.lot_id.standard_price or 0.0
+
+                from_usage = line.location_id.usage
+                to_usage = line.location_dest_id.usage
+
+                if from_usage not in ('internal', 'transit') and to_usage in ('internal', 'transit'):
+                    # Incoming stock → DEBIT
+                    debit += qty * price
+                elif from_usage in ('internal', 'transit') and to_usage not in ('internal', 'transit'):
+                    # Outgoing stock → CREDIT
+                    credit += qty * price
+
+            quant.debit_line = debit
+            quant.credit_line = credit
+
     @api.model
     def action_view_adjustment(self):
         """ Similar to _get_quants_action except specific for inventory adjustments (i.e. inventory counts). """
