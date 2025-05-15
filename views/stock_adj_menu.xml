@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Action untuk membuka stock.inventory (Stock Adjustment) -->
-    <record id="action_custom_stock_inventory" model="ir.actions.act_window">
-        <field name="name">Stock Adjustments</field>
-        <field name="res_model">stock.inventory</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{}</field>
-    </record>
-
-    <!-- Menuitem baru di bawah Inventory > Operations -->
+    <!-- Tambahkan menu baru yang panggil wizard stock adjustment -->
     <menuitem
         id="menu_custom_stock_adjustment"
         name="Stock Adjustments"
         parent="stock.menu_stock_warehouse_mgmt_operations"
-        action="action_custom_stock_inventory"
         sequence="30"
+        action="stock.action_inventory_form"
     />
 </odoo>
