@@ -6,6 +6,6 @@
         name="Stock Adjustments"
         parent="stock.menu_stock_adjustments"
         sequence="30"
-        action="stock.action_inventory_form"
+        action="stock.action_view_inventory_tree"
     />
 </odoo>
