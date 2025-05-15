@@ -3,8 +3,6 @@ from odoo import models, fields, api, _
 class StockAdj(models.Model):
     _inherit = 'stock.quant'
 
-    # debit_line = fields.Monetary(string='Debit', store=True)
-    # credit_line = fields.Monetary(string='Credit', store=True)
     debit_line = fields.Monetary(string='Debit', compute='_compute_debit_credit_line', store=True)
     credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
