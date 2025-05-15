@@ -1,5 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
+    <record model="ir.actions.server" id="action_view_adjustment_tree"> <!-- Menu + python -->
+        <field name="name">Inventory</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="path">stock-adjustment</field>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="code">
+            action = model.action_view_adjustment()
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_stock_adj_tree_custom">
         <field name="name">stock.quant.adj.list.custom</field>
         <field name="model">stock.quant</field>
