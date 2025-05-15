@@ -14,17 +14,16 @@ class StockAdj(models.Model):
         for rec in self:
             rec.currency_id = rec.product_id.currency_id or self.env.company.currency_id
 
-    @api.depends('product_id', 'lot_id')
+    @api.depends('lot_id')
     def _compute_debit_credit_line(self):
         for quant in self:
             quant.debit_line = quant.credit_line = 0.0
 
-            if not quant.product_id or not quant.lot_id:
+            if not quant.lot_id:
                 continue
 
             # Ambil 1 stock.move.line terbaru untuk product dan lot_id terkait
             latest_move_line = self.env['stock.move.line'].search([
-                ('product_id', '=', quant.product_id.id),
                 ('lot_id', '=', quant.lot_id.id),
                 ('state', '=', 'done'),
             ], order='date desc', limit=1)
