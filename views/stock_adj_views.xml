@@ -68,4 +68,12 @@
             </list>
         </field>
     </record>
+
+    <menuitem
+        id="menu_custom_stock_adjustment"
+        name="Stock Adjustments"
+        parent="stock.menu_stock_adjustments"
+        sequence="30"
+        action="action_view_adjustment_tree"
+    />
 </odoo>
