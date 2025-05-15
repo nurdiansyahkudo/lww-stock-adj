@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import stock_adj
+# from . import stock_adj
