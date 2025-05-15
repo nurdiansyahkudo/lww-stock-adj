@@ -14,32 +14,31 @@ class StockAdj(models.Model):
         for rec in self:
             rec.currency_id = rec.product_id.currency_id or self.env.company.currency_id
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'lot_id')
     def _compute_debit_credit_line(self):
         for quant in self:
-            debit = credit = 0.0
-            # Cari stock.move.line yang terkait dengan product & lot_id dari quant
-            move_lines = self.env['stock.move.line'].search([
+            quant.debit_line = quant.credit_line = 0.0
+
+            if not quant.product_id or not quant.lot_id:
+                continue
+
+            # Ambil 1 stock.move.line terbaru untuk product dan lot_id terkait
+            latest_move_line = self.env['stock.move.line'].search([
                 ('product_id', '=', quant.product_id.id),
                 ('lot_id', '=', quant.lot_id.id),
-            ])
+                ('state', '=', 'done'),
+            ], order='date desc', limit=1)
 
-            for line in move_lines:
-                qty = line.quantity
+            if latest_move_line:
+                qty = latest_move_line.quantity
                 price = quant.lot_id.standard_price or 0.0
-
-                from_usage = line.location_id.usage
-                to_usage = line.location_dest_id.usage
+                from_usage = latest_move_line.location_id.usage
+                to_usage = latest_move_line.location_dest_id.usage
 
                 if from_usage not in ('internal', 'transit') and to_usage in ('internal', 'transit'):
-                    # Incoming stock → DEBIT
-                    debit += qty * price
+                    quant.debit_line = qty * price
                 elif from_usage in ('internal', 'transit') and to_usage not in ('internal', 'transit'):
-                    # Outgoing stock → CREDIT
-                    credit += qty * price
-
-            quant.debit_line = debit
-            quant.credit_line = credit
+                    quant.credit_line = qty * price
 
     @api.model
     def action_view_adjustment(self):
