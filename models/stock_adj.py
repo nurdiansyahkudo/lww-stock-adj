@@ -59,6 +59,11 @@ class StockAdj(models.Model):
         }
         return action
     
+    def _get_inventory_fields_create(self):
+        fields = super()._get_inventory_fields_create()
+        fields.append('is_adjustment_line')
+        return fields
+    
     @api.model_create_multi
     def create(self, vals_list):
         view_id = self.env.context.get('params', {}).get('view_id')
