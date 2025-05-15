@@ -1,7 +1,7 @@
 {
     'name': 'Custom Stock Adjustment',
     'version': '1.0',
-    'depends': ['stock'],
+    'depends': ['stock', 'stock_quant'],
     'data': [
         'views/stock_adj_menu.xml',
         'views/stock_adj_views.xml',
