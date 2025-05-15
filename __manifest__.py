@@ -3,7 +3,7 @@
     'version': '1.0',
     'depends': ['stock'],
     'data': [
-        'views/stock_adjustment_menu.xml',
+        'views/stock_adj_menu.xml',
     ],
     'installable': True,
     'application': False,
