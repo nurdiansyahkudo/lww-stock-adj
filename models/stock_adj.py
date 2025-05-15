@@ -23,7 +23,7 @@ class StockAdj(models.Model):
             ])
 
             for line in move_lines:
-                qty = line.qty_done
+                qty = line.quantity
                 price = line.lot_id.standard_price or 0.0
 
                 from_usage = line.location_id.usage
