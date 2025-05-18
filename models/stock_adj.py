@@ -10,7 +10,7 @@ class StockAdj(models.Model):
     debit_line = fields.Monetary(string='Debit', compute='_compute_debit_credit_line', store=True)
     credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
-    is_adjustment_line = fields.Boolean(string='Adjustment Line', default=False)
+    is_adjustment_line = fields.Boolean(string='Adjustment Line', default=False, readonly=True)
 
     @api.depends('product_id')
     def _compute_currency_id(self):
@@ -65,10 +65,10 @@ class StockAdj(models.Model):
         }
         return action
     
-    def _get_inventory_fields_create(self):
-        fields = super()._get_inventory_fields_create()
-        fields.append('is_adjustment_line')
-        return fields
+    # def _get_inventory_fields_create(self):
+    #     fields = super()._get_inventory_fields_create()
+    #     fields.append('is_adjustment_line')
+    #     return fields
     
     @api.model_create_multi
     def create(self, vals_list):
