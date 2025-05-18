@@ -77,7 +77,7 @@ class StockAdj(models.Model):
             ctx['search_default_domain'] = domain
 
         # Panggil method bawaan dan update context dengan domain baru
-        res = super(StockQuant, self)._set_view_context()
+        res = super(StockAdj, self)._set_view_context()
         # Override domain jika kita sudah set di context
         if ctx.get('stock_adjustment_mode'):
             res['domain'] = domain
