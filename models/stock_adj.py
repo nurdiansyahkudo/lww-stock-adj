@@ -52,7 +52,8 @@ class StockAdj(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('is_adjustment_line', '=', True)],
+            # 'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('is_adjustment_line', '=', True)],
+            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
@@ -65,10 +66,10 @@ class StockAdj(models.Model):
         }
         return action
     
-    def _get_inventory_fields_create(self):
-        fields = super()._get_inventory_fields_create()
-        fields.append('is_adjustment_line')
-        return fields
+    # def _get_inventory_fields_create(self):
+    #     fields = super()._get_inventory_fields_create()
+    #     fields.append('is_adjustment_line')
+    #     return fields
     
     @api.model_create_multi
     def create(self, vals_list):
@@ -90,7 +91,7 @@ class StockAdj(models.Model):
                 _logger.warning("Quant %s has no discrepancy, will not trigger stock move on apply", quant.id)
 
             if custom_view_id and view_id == custom_view_id:
-                quant.is_adjustment_line = True
+                # quant.is_adjustment_line = True
                 if is_inventory_mode:
                     if 'inventory_quantity' not in vals and 'quantity' in vals:
                         quant.inventory_quantity = 0.0
