@@ -36,6 +36,7 @@ class StockAdj(models.Model):
     @api.model
     def action_view_adjustment(self):
         """ Similar to _get_quants_action except specific for inventory adjustments (i.e. inventory counts). """
+        self = self.with_context(stock_adjustment_mode=True)
         self = self._set_view_context()
         self._quant_tasks()
 
@@ -64,6 +65,24 @@ class StockAdj(models.Model):
                            _('Import')),
         }
         return action
+    
+    @api.model
+    def _set_view_context(self):
+        ctx = dict(self.env.context or {})
+        domain = ctx.get('search_default_domain') or []
+
+        if ctx.get('stock_adjustment_mode'):
+            # Contoh: filter yang beda untuk stock adjustment
+            domain = [('quantity', '!=', 0)]  # Contoh filter: hanya quant dengan qty tidak 0, bisa kamu ganti sesuai kebutuhan
+            ctx['search_default_domain'] = domain
+
+        # Panggil method bawaan dan update context dengan domain baru
+        res = super(StockQuant, self)._set_view_context()
+        # Override domain jika kita sudah set di context
+        if ctx.get('stock_adjustment_mode'):
+            res['domain'] = domain
+
+        return res
     
     @api.model_create_multi
     def create(self, vals_list):
