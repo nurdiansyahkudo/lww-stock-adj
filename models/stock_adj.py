@@ -66,12 +66,22 @@ class StockAdj(models.Model):
     
     @api.model_create_multi
     def create(self, vals_list):
-        # Jika context ada view_id yang sesuai dengan custom view, tandai is_adjustment_line
         view_id = self.env.context.get('params', {}).get('view_id')
         custom_view_ref = 'lww_stock_adj.view_stock_adj_tree_custom'
-        custom_view_id = self.env.ref(custom_view_ref).id if self.env.ref(custom_view_ref, raise_if_not_found=False) else False
+        custom_view_id = self.env.ref(custom_view_ref, raise_if_not_found=False).id if self.env.ref(custom_view_ref, raise_if_not_found=False) else False
+
+        is_inventory_mode = self._is_inventory_mode()
+        allowed_fields = self._get_inventory_fields_create()
+        quants = self.env['stock.quant']
 
         for vals in vals_list:
             if custom_view_id and view_id == custom_view_id:
                 vals['is_adjustment_line'] = True
-        return super().create(vals_list)
+                if is_inventory_mode:
+                    if 'inventory_quantity' not in vals and 'quantity' in vals:
+                        # Set nilai inventory_quantity agar diproses _apply_inventory()
+                        vals['inventory_quantity'] = vals['quantity']
+            quant = super().create([vals])
+            quants |= quant
+
+        return quants
