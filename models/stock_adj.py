@@ -10,19 +10,6 @@ class StockAdj(models.Model):
     debit_line = fields.Monetary(string='Debit', compute='_compute_debit_credit_line', store=True)
     credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
-    is_custom_adjustment = fields.Boolean(
-        string="Custom Adjustment",
-        compute="_compute_is_custom_adjustment",
-        store=False
-    )
-
-    @api.depends_context('params')
-    def _compute_is_custom_adjustment(self):
-        view_id = self.env.context.get('params', {}).get('view_id')
-        custom_view_ref = 'lww_stock_adj.view_stock_quant_tree_inventory_editable_adj'
-        custom_view_id = self.env.ref(custom_view_ref, raise_if_not_found=False).id if custom_view_ref else False
-        for record in self:
-            record.is_custom_adjustment = view_id == custom_view_id
 
     @api.depends('product_id')
     def _compute_currency_id(self):
@@ -64,7 +51,7 @@ class StockAdj(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('is_custom_adjustment', '=', True)],
+            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
