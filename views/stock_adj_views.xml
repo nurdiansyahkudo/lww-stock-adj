@@ -22,11 +22,11 @@
 
             <xpath expr="//list" position="inside">
                 <header>
-                <button name="action_apply_all" string="Apply All" type="object"
-                            class="btn btn-secondary"
-                            invisible="not context.get('inventory_mode') or context.get('inventory_report_mode')"
-                            display="always"
-                        />
+                    <button name="action_apply_all" string="Apply All" type="object"
+                                class="btn btn-secondary"
+                                invisible="not context.get('inventory_mode') or context.get('inventory_report_mode')"
+                                display="always"
+                            />
                 </header>
             </xpath>
 
