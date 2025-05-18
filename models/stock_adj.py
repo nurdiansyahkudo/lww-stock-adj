@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.tools.float_utils import float_compare, float_is_zero
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -96,13 +97,24 @@ class StockAdj(models.Model):
         return quants
     
     def _apply_inventory(self):
+        move_vals = []
         for quant in self:
-            if not quant.inventory_quantity_set:
-                continue  # skip if not intended to be applied
-
-            if quant.is_adjustment_line:
-                _logger.info(f"Applying inventory adjustment for quant {quant.id} with debit/credit tracking")
-                # custom logic can be placed here if needed
-            
-        # call original apply logic
-        return super()._apply_inventory()
+            # Create and validate a move so that the quant matches its `inventory_quantity`.
+            if float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0:
+                move_vals.append(
+                    quant._get_inventory_move_values(quant.inventory_diff_quantity,
+                                                     quant.product_id.with_company(quant.company_id).property_stock_inventory,
+                                                     quant.location_id, package_dest_id=quant.package_id))
+            else:
+                move_vals.append(
+                    quant._get_inventory_move_values(-quant.inventory_diff_quantity,
+                                                     quant.location_id,
+                                                     quant.product_id.with_company(quant.company_id).property_stock_inventory,
+                                                     package_id=quant.package_id))
+        moves = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
+        moves._action_done()
+        self.location_id.write({'last_inventory_date': fields.Date.today()})
+        date_by_location = {loc: loc._get_next_inventory_date() for loc in self.mapped('location_id')}
+        for quant in self:
+            quant.inventory_date = date_by_location[quant.location_id]
+        self.action_clear_inventory_quantity()
