@@ -43,7 +43,7 @@ class StockAdj(models.Model):
         ctx['no_at_date'] = True
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
-        view_id = self.env.ref('lww_stock_adj.view_stock_quant_tree_inventory_editable').id
+        view_id = self.env.ref('lww_stock_adj.view_stock_quant_tree_inventory_editable_adj').id
         action = {
             'name': _('Stock Adjustments'),
             'view_mode': 'list',
@@ -71,7 +71,7 @@ class StockAdj(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         view_id = self.env.context.get('params', {}).get('view_id')
-        custom_view_ref = 'lww_stock_adj.view_stock_quant_tree_inventory_editable'
+        custom_view_ref = 'lww_stock_adj.view_stock_quant_tree_inventory_editable_adj'
         custom_view_id = self.env.ref(custom_view_ref, raise_if_not_found=False).id if self.env.ref(custom_view_ref, raise_if_not_found=False) else False
 
         is_inventory_mode = self._is_inventory_mode()
@@ -89,7 +89,3 @@ class StockAdj(models.Model):
             quants |= quant
 
         return quants
-    
-    def action_apply_inventory(self):
-        _logger.info("✅ APPLY CLICKED")
-        return super().action_apply_inventory()
