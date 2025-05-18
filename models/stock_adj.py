@@ -36,6 +36,7 @@ class StockAdj(models.Model):
         self._quant_tasks()
 
         ctx = dict(self.env.context or {})
+        ctx['inventory_mode'] = True
         ctx['no_at_date'] = True
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
