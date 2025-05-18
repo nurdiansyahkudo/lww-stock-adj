@@ -36,7 +36,6 @@
             </xpath>
 
             <xpath expr="//field[@name='inventory_date']" position="after">
-                <field name="is_adjustment_line" invisible="1" readonly="1" force_save="0" optional="hide"/>
                 <field name="currency_id" invisible="1" optional="hide"/>
             </xpath>
         </field>

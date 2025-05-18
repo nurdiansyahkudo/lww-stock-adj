@@ -10,7 +10,7 @@ class StockAdj(models.Model):
     debit_line = fields.Monetary(string='Debit', compute='_compute_debit_credit_line', store=True)
     credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
-    is_adjustment_line = fields.Boolean(string='Adjustment Line', default=False, readonly=True)
+    # is_adjustment_line = fields.Boolean(string='Adjustment Line', default=False, readonly=True)
 
     @api.depends('product_id')
     def _compute_currency_id(self):
@@ -52,7 +52,7 @@ class StockAdj(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('is_adjustment_line', '=', True)],
+            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
