@@ -65,11 +65,6 @@ class StockAdj(models.Model):
         }
         return action
     
-    # def _get_inventory_fields_create(self):
-    #     fields = super()._get_inventory_fields_create()
-    #     fields.append('is_adjustment_line')
-    #     return fields
-    
     @api.model_create_multi
     def create(self, vals_list):
         # Ambil view ID dari context
@@ -90,7 +85,6 @@ class StockAdj(models.Model):
                 _logger.warning("Quant %s has no discrepancy, will not trigger stock move on apply", quant.id)
 
             if custom_view_id and view_id == custom_view_id:
-                quant.is_adjustment_line = True
                 if is_inventory_mode:
                     if 'inventory_quantity' not in vals and 'quantity' in vals:
                         quant.inventory_quantity = 0.0
