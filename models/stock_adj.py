@@ -41,6 +41,7 @@ class StockAdj(models.Model):
 
         ctx = dict(self.env.context or {})
         ctx['inventory_mode'] = True
+        ctx['inventory_report_mode'] = False
         ctx['no_at_date'] = True
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
