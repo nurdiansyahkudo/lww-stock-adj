@@ -74,6 +74,11 @@ class StockAdj(models.Model):
         custom_view_ref = 'lww_stock_adj.view_stock_quant_tree_inventory_editable_adj'
         custom_view_id = self.env.ref(custom_view_ref, raise_if_not_found=False).id if self.env.ref(custom_view_ref, raise_if_not_found=False) else False
 
+        # optional: warn if quantity == inventory_quantity
+        if 'quantity' in vals and vals['quantity'] == vals['inventory_quantity']:
+            _logger.warning("Quant %s has no discrepancy, will not trigger stock move on apply", vals)
+
+
         is_inventory_mode = self._is_inventory_mode()
         allowed_fields = self._get_inventory_fields_create()
         quants = self.env['stock.quant']
@@ -83,9 +88,21 @@ class StockAdj(models.Model):
                 vals['is_adjustment_line'] = True
                 if is_inventory_mode:
                     if 'inventory_quantity' not in vals and 'quantity' in vals:
-                        vals['inventory_quantity'] = 0.0  # force discrepancy
+                        vals['inventory_quantity'] = 0.0
                     vals['inventory_quantity_set'] = True 
             quant = super().create([vals])
             quants |= quant
 
         return quants
+    
+    def _apply_inventory(self):
+        for quant in self:
+            if not quant.inventory_quantity_set:
+                continue  # skip if not intended to be applied
+
+            if quant.is_adjustment_line:
+                _logger.info(f"Applying inventory adjustment for quant {quant.id} with debit/credit tracking")
+                # custom logic can be placed here if needed
+            
+        # call original apply logic
+        return super()._apply_inventory()
