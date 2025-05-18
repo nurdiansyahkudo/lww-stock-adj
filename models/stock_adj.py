@@ -79,9 +79,9 @@ class StockAdj(models.Model):
             if custom_view_id and view_id == custom_view_id:
                 vals['is_adjustment_line'] = True
                 if is_inventory_mode:
-                    if 'inventory_quantity' not in vals and 'quantity' in vals:
-                        # Set nilai inventory_quantity agar diproses _apply_inventory()
-                        vals['inventory_quantity'] = vals['quantity']
+                    if is_inventory_mode and 'inventory_quantity' not in vals and 'quantity' in vals:
+                        if vals.get('quantity') != 0.0:  # Make sure there's a diff
+                            vals['inventory_quantity'] = 0.0  # Force adjustment to 0 → will create stock move
             quant = super().create([vals])
             quants |= quant
 
