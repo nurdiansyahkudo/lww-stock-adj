@@ -11,6 +11,7 @@ class StockAdj(models.Model):
     credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
     is_opname = fields.Boolean(string="Is Opname", store=True, default=False)
+    is_adjustment = fields.Boolean(string="Is Adjustment", store=True, default=False)
 
     @api.depends('product_id')
     def _compute_currency_id(self):
@@ -74,7 +75,7 @@ class StockAdj(models.Model):
 
         ctx = dict(self.env.context or {})
         ctx['no_at_date'] = True
-        ctx['active_domain'] = [('location_id.usage', 'in', ['internal', 'transit']), ('is_opname', '=', True)]
+        ctx['active_domain'] = [('location_id.usage', 'in', ['internal', 'transit']), ('is_adjustment', '=', False)]
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
         view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
@@ -84,7 +85,7 @@ class StockAdj(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('is_opname', '=', True)],
+            'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('is_adjustment', '=', False)],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
