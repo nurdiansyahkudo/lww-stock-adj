@@ -10,7 +10,7 @@ class StockAdj(models.Model):
     debit_line = fields.Monetary(string='Debit', compute='_compute_debit_credit_line', store=True)
     credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
-    is_adjustment = fields.Boolean(string="Is Adjustment")
+    is_adjustment = fields.Boolean(string="Is Adjustment", store=True, default=False)
 
     @api.depends('product_id')
     def _compute_currency_id(self):
@@ -108,7 +108,12 @@ class StockAdj(models.Model):
         is_inventory_mode = self._is_inventory_mode()
         allowed_fields = self._get_inventory_fields_create()
 
-        # Buat quant records sekaligus, sesuai dengan @api.model_create_multi
+        # ✅ Tambahkan is_adjustment = True jika dari view kustom
+        if custom_view_id and view_id == custom_view_id:
+            for vals in vals_list:
+                vals['is_adjustment'] = True
+
+        # Buat quant records
         quants = super().create(vals_list)
 
         # Apply custom logic setelah quant dibuat
@@ -122,7 +127,7 @@ class StockAdj(models.Model):
                         quant.inventory_quantity = 0.0
                     quant.inventory_quantity_set = True
 
-        return quants
+        return quants      
     
     def _apply_inventory(self):
         move_vals = []
