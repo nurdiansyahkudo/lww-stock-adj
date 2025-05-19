@@ -43,6 +43,7 @@ class StockAdj(models.Model):
         ctx['inventory_mode'] = True
         ctx['inventory_report_mode'] = False
         ctx['no_at_date'] = True
+        ctx['active_domain'] = [('location_id.usage', 'in', ['internal', 'transit']), ('is_adjustment', '=', True)]
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
         view_id = self.env.ref('lww_stock_adj.view_stock_quant_tree_inventory_editable_adj').id
@@ -73,6 +74,7 @@ class StockAdj(models.Model):
 
         ctx = dict(self.env.context or {})
         ctx['no_at_date'] = True
+        ctx['active_domain'] = [('location_id.usage', 'in', ['internal', 'transit']), ('is_adjustment', '=', False)]
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
         view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
