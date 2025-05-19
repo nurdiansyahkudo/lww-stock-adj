@@ -97,29 +97,29 @@ class StockAdj(models.Model):
         }
         return action
     
-    @api.model_create_multi
-    def create(self, vals_list):
-        # Ambil view ID dari context
-        view_id = self.env.context.get('params', {}).get('view_id')
-        custom_view_ref = 'lww_stock_adj.view_stock_quant_tree_inventory_editable_adj'
-        custom_view = self.env.ref(custom_view_ref, raise_if_not_found=False)
-        custom_view_id = custom_view.id if custom_view else False
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     # Ambil view ID dari context
+    #     view_id = self.env.context.get('params', {}).get('view_id')
+    #     custom_view_ref = 'lww_stock_adj.view_stock_quant_tree_inventory_editable_adj'
+    #     custom_view = self.env.ref(custom_view_ref, raise_if_not_found=False)
+    #     custom_view_id = custom_view.id if custom_view else False
 
-        is_inventory_mode = self._is_inventory_mode()
-        allowed_fields = self._get_inventory_fields_create()
+    #     is_inventory_mode = self._is_inventory_mode()
+    #     allowed_fields = self._get_inventory_fields_create()
 
-        # Buat quant records sekaligus, sesuai dengan @api.model_create_multi
-        quants = super().create(vals_list)
+    #     # Buat quant records sekaligus, sesuai dengan @api.model_create_multi
+    #     quants = super().create(vals_list)
 
-        # Apply custom logic setelah quant dibuat
-        for quant, vals in zip(quants, vals_list):
-            if 'quantity' in vals and 'inventory_quantity' in vals and vals['quantity'] == vals['inventory_quantity']:
-                _logger.warning("Quant %s has no discrepancy, will not trigger stock move on apply", quant.id)
+    #     # Apply custom logic setelah quant dibuat
+    #     for quant, vals in zip(quants, vals_list):
+    #         if 'quantity' in vals and 'inventory_quantity' in vals and vals['quantity'] == vals['inventory_quantity']:
+    #             _logger.warning("Quant %s has no discrepancy, will not trigger stock move on apply", quant.id)
 
-            if custom_view_id and view_id == custom_view_id:
-                if is_inventory_mode:
-                    if 'inventory_quantity' not in vals and 'quantity' in vals:
-                        quant.inventory_quantity = 0.0
-                    quant.inventory_quantity_set = True
+    #         if custom_view_id and view_id == custom_view_id:
+    #             if is_inventory_mode:
+    #                 if 'inventory_quantity' not in vals and 'quantity' in vals:
+    #                     quant.inventory_quantity = 0.0
+    #                 quant.inventory_quantity_set = True
 
-        return quants
+    #     return quants
