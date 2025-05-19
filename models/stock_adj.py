@@ -108,12 +108,7 @@ class StockAdj(models.Model):
         is_inventory_mode = self._is_inventory_mode()
         allowed_fields = self._get_inventory_fields_create()
 
-        # ✅ Tambahkan is_adjustment = True jika dari view kustom
-        if custom_view_id and view_id == custom_view_id:
-            for vals in vals_list:
-                vals['is_adjustment'] = True
-
-        # Buat quant records
+        # Buat quant records sekaligus, sesuai dengan @api.model_create_multi
         quants = super().create(vals_list)
 
         # Apply custom logic setelah quant dibuat
@@ -127,7 +122,70 @@ class StockAdj(models.Model):
                         quant.inventory_quantity = 0.0
                     quant.inventory_quantity_set = True
 
-        return quants      
+        return quants
+    
+    @api.model
+    def action_apply_all(self):
+        # ambil domain aktif, termasuk is_adjustment True
+        domain = self.env.context.get('active_domain', [])
+        quant_ids = self.search(domain).ids
+        ctx = dict(self.env.context or {}, default_quant_ids=quant_ids)
+        view = self.env.ref('stock.stock_inventory_adjustment_name_form_view', False)
+        return {
+            'name': _('Inventory Adjustment Reference / Reason'),
+            'type': 'ir.actions.act_window',
+            'views': [(view.id, 'form')],
+            'res_model': 'stock.inventory.adjustment.name',
+            'target': 'new',
+            'context': ctx,
+        }
+
+    def action_apply_inventory(self):
+        products_tracked_without_lot = []
+        for quant in self:
+            rounding = quant.product_uom_id.rounding
+            if fields.Float.is_zero(quant.inventory_diff_quantity, precision_rounding=rounding)\
+                and fields.Float.is_zero(quant.inventory_quantity, precision_rounding=rounding)\
+                and fields.Float.is_zero(quant.quantity, precision_rounding=rounding):
+                continue
+
+            if quant.product_id.tracking in ['lot', 'serial'] and\
+                not quant.lot_id and quant.inventory_quantity != quant.quantity and not quant.quantity:
+                products_tracked_without_lot.append(quant.product_id.id)
+
+        ctx = dict(self.env.context or {})
+        ctx['default_quant_ids'] = self.ids
+
+        quants_outdated = self.filtered(lambda q: q.is_outdated)
+        if quants_outdated:
+            ctx['default_quant_to_fix_ids'] = quants_outdated.ids
+            return {
+                'name': _('Conflict in Inventory Adjustment'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'res_model': 'stock.inventory.conflict',
+                'target': 'new',
+                'context': ctx,
+            }
+
+        if products_tracked_without_lot:
+            ctx['default_product_ids'] = products_tracked_without_lot
+            return {
+                'name': _('Tracked Products in Inventory Adjustment'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'res_model': 'stock.track.confirmation',
+                'target': 'new',
+                'context': ctx,
+            }
+
+        # Tambahan logging untuk debugging
+        _logger.info("Applying inventory to %d quants (adjustment included)", len(self))
+
+        self._apply_inventory()
+        self.inventory_quantity_set = False
     
     def _apply_inventory(self):
         move_vals = []
