@@ -39,9 +39,12 @@ class StockAdj(models.Model):
         self._quant_tasks()
 
         ctx = dict(self.env.context or {})
-        ctx['inventory_mode'] = True
-        ctx['inventory_report_mode'] = False
-        ctx['no_at_date'] = True
+        ctx.update({
+            'inventory_mode': True,
+            'inventory_report_mode': False,
+            'no_at_date': True,
+            'search_default_inventory_to_set': 1,  # Filter awal hanya item yang perlu disesuaikan
+        })
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
         view_id = self.env.ref('lww_stock_adj.view_stock_quant_tree_inventory_editable_adj').id
@@ -51,7 +54,7 @@ class StockAdj(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('id', '=', -1)],
+            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
@@ -63,4 +66,3 @@ class StockAdj(models.Model):
                            _('Import')),
         }
         return action
-    
