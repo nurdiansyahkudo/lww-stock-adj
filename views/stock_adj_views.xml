@@ -10,18 +10,7 @@
             action = model.action_view_adjustment()
         </field>
     </record>
-
-    <!-- <record id="view_stock_quant_search_adj" model="ir.ui.view">
-        <field name="name">stock.quant.search.adjustment</field>
-        <field name="model">stock.quant</field>
-        <field name="inherit_id" ref="stock.quant_search_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//search" position="inside">
-                <filter name="empty" string="Adjustments" domain="[('quantity', '=', 0)]" context="{'search_default_empty': 1}"/>
-            </xpath>
-        </field>
-    </record> -->
-
+    
     <record id="view_stock_quant_tree_inventory_editable_adj" model="ir.ui.view">
         <field name="name">stock.quant.inventory.list.editable.adjustment</field>
         <field name="model">stock.quant</field>

@@ -10,6 +10,7 @@ class StockAdj(models.Model):
     debit_line = fields.Monetary(string='Debit', compute='_compute_debit_credit_line', store=True)
     credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
+    is_adj = fields.Boolean(string='Is Adjustment', store=True)
 
     @api.depends('product_id')
     def _compute_currency_id(self):
@@ -43,7 +44,6 @@ class StockAdj(models.Model):
             'inventory_mode': True,
             'inventory_report_mode': False,
             'no_at_date': True,
-            # 'search_default_empty': True,
         })
 
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
@@ -56,7 +56,7 @@ class StockAdj(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            # 'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
+            'domain': [('location_id.usage', 'in', ['internal', 'transit']), ('is_adj', '=', True)],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
@@ -68,8 +68,12 @@ class StockAdj(models.Model):
                         _('Import')),
         }
         return action
-        
-    def _get_inventory_fields_create(self):
-        fields = super()._get_inventory_fields_create()
-        fields += ['debit_line', 'credit_line', 'currency_id']
+    
+    @api.model
+    def _get_inventory_fields_write(self):
+        """ Returns a list of fields user can edit when he want to edit a quant in `inventory_mode`.
+        """
+        fields = ['inventory_quantity', 'inventory_quantity_auto_apply', 'inventory_diff_quantity',
+                  'inventory_date', 'user_id', 'inventory_quantity_set', 'is_outdated', 'lot_id',
+                  'location_id', 'package_id', 'is_adj']
         return fields
