@@ -69,3 +69,7 @@ class StockAdj(models.Model):
         }
         return action
         
+    def _get_inventory_fields_create(self):
+        fields = super()._get_inventory_fields_create()
+        fields += ['debit_line', 'credit_line', 'currency_id']
+        return fields
