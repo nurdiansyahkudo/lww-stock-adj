@@ -39,25 +39,19 @@ class StockAdj(models.Model):
         self._quant_tasks()
 
         ctx = dict(self.env.context or {})
-        ctx.update({
-            'inventory_mode': True,
-            'inventory_report_mode': False,
-            'no_at_date': True,
-            'search_default_empty_quants': 1,  # filter awal untuk tampilkan kosong
-        })
-
+        ctx['inventory_mode'] = True
+        ctx['inventory_report_mode'] = False
+        ctx['no_at_date'] = True
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
-
         view_id = self.env.ref('lww_stock_adj.view_stock_quant_tree_inventory_editable_adj').id
-
-        return {
+        action = {
             'name': _('Stock Adjustments'),
             'view_mode': 'list',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],  # tetap domain normal
+            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
@@ -65,6 +59,8 @@ class StockAdj(models.Model):
                 </p><p>
                     {} <span class="fa fa-long-arrow-right"/> {}</p>
                 """.format(_('Your stock is currently empty'),
-                        _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
-                        _('Import')),
+                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
+                           _('Import')),
         }
+        return action
+    
