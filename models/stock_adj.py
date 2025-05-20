@@ -17,18 +17,17 @@ class StockAdj(models.Model):
         for rec in self:
             rec.currency_id = rec.product_id.currency_id or self.env.company.currency_id
 
-    @api.depends('lot_id')
+    @api.depends('lot_id', 'quantity')
     def _compute_debit_credit_line(self):
         for quant in self:
             debit = credit = 0.0
             price = quant.lot_id.standard_price or 0.0
             qty = quant.quantity
 
-            # Logic baru:
             if qty == 1:
-                credit = qty * price
+                credit = price
             elif qty == 0:
-                debit = 1 * price  # diasumsikan 1 masuk (stok awal)
+                debit = price
 
             quant.debit_line = debit
             quant.credit_line = credit
