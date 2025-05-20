@@ -59,6 +59,7 @@ class StockAdj(models.Model):
             'context': ctx,
             'domain': [('location_id.usage', 'in', ['internal', 'transit'])],  # tetap domain normal
             'views': [(view_id, 'list')],
+            'search_view_id': self.env.ref('lww_stock_adj.quant_search_view_adj').id,
             'help': """
                 <p class="o_view_nocontent_smiling_face">
                     {}
