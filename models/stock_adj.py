@@ -43,7 +43,7 @@ class StockAdj(models.Model):
             'inventory_mode': True,
             'inventory_report_mode': False,
             'no_at_date': True,
-            'search_default_empty': True,  # Default filter to hide everything
+            # 'search_default_empty': True,
         })
 
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
@@ -56,7 +56,7 @@ class StockAdj(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
+            # 'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
