@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="stock.quant_search_view"/>
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
-                <filter name="empty" string="No Records" domain="[('id', '=', 0)]" context="{'default_search_empty': 1}"/>
+                <filter name="empty" string="Adjustments" domain="[('inventory_quantity', '=', 0)]" context="{'search_default_empty': 1}"/>
             </xpath>
         </field>
     </record>
