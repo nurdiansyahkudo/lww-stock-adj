@@ -39,11 +39,16 @@ class StockAdj(models.Model):
         self._quant_tasks()
 
         ctx = dict(self.env.context or {})
-        ctx['inventory_mode'] = True
-        ctx['inventory_report_mode'] = False
-        ctx['no_at_date'] = True
+        ctx.update({
+            'inventory_mode': True,
+            'inventory_report_mode': False,
+            'no_at_date': True,
+            'search_default_empty': True,  # Default filter to hide everything
+        })
+
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
+
         view_id = self.env.ref('lww_stock_adj.view_stock_quant_tree_inventory_editable_adj').id
         action = {
             'name': _('Stock Adjustments'),
@@ -59,8 +64,8 @@ class StockAdj(models.Model):
                 </p><p>
                     {} <span class="fa fa-long-arrow-right"/> {}</p>
                 """.format(_('Your stock is currently empty'),
-                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
-                           _('Import')),
+                        _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
+                        _('Import')),
         }
         return action
-    
+        
