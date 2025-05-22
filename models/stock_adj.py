@@ -7,8 +7,8 @@ _logger = logging.getLogger(__name__)
 class StockAdj(models.Model):
     _inherit = 'stock.quant'
 
-    debit_line = fields.Monetary(string='Debit', compute='_compute_debit_credit_line', store=True)
-    credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', store=True)
+    debit_line = fields.Monetary(string='Debit', compute='_compute_debit_credit_line', inverse='_inverse_debit_line', store=True, readonly=False)
+    credit_line = fields.Monetary(string='Credit', compute='_compute_debit_credit_line', inverse='_inverse_credit_line', store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency_id', store=True)
     is_adj = fields.Boolean(string='Is Adjustment', store=True)
 
@@ -31,6 +31,14 @@ class StockAdj(models.Model):
 
             quant.debit_line = debit
             quant.credit_line = credit
+
+    def _inverse_debit_line(self):
+        # Placeholder, bisa diisi logic tambahan jika perlu menyimpan ke tempat lain
+        _logger.debug("Inverse debit_line called for %s", self)
+
+    def _inverse_credit_line(self):
+        # Placeholder, bisa diisi logic tambahan jika perlu menyimpan ke tempat lain
+        _logger.debug("Inverse credit_line called for %s", self)
 
     @api.model
     def action_view_adjustment(self):
