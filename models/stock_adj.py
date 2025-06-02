@@ -58,7 +58,7 @@ class StockAdj(models.Model):
 
         view_id = self.env.ref('lww_stock_adj.view_stock_quant_tree_inventory_editable_adj').id
         action = {
-            'name': _('Stock Adjustments'),
+            'name': _('Stock Adjustment'),
             'view_mode': 'list',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',

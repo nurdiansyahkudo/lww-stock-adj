@@ -90,7 +90,7 @@
 
     <menuitem
         id="menu_custom_stock_adjustment"
-        name="Stock Adjustments"
+        name="Stock Adjustment"
         parent="stock.menu_stock_adjustments"
         sequence="30"
         action="action_view_adjustment_tree"
